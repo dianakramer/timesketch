@@ -906,6 +906,13 @@ class EventAnnotationResource(resources.ResourceMixin, Resource):
                     if "__ts_star" in form.annotation.data:
                         search_node_label = "__ts_star"
                     current_search_node.add_label(search_node_label)
+
+                # Adding STARS to Conclusions
+                if current_search_node and "__ts_star" in form.annotation.data:
+                    for conclusion in current_search_node.investigativequestion.conclusions:
+                        if conclusion.user_id == current_user.id:
+                            event.conclusions.append(conclusion)
+
             else:
                 abort(
                     HTTP_STATUS_CODE_BAD_REQUEST,
