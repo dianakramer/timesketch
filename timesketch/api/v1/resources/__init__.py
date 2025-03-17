@@ -270,6 +270,11 @@ class ResourceMixin(object):
         "updated_at": fields.DateTime("iso8601"),
     }
 
+    question_conclusion_event_fields = {
+        "datetime": fields.String,
+        "message": fields.String,
+    }
+
     question_conclusion_fields = {
         "id": fields.Integer,
         "user": fields.Nested(user_fields),
@@ -277,6 +282,7 @@ class ResourceMixin(object):
         "automated": fields.Boolean,
         "created_at": fields.DateTime("iso8601"),
         "updated_at": fields.DateTime("iso8601"),
+        "conclusion_events": fields.List(fields.Nested(question_conclusion_event_fields)),
     }
 
     question_fields = {

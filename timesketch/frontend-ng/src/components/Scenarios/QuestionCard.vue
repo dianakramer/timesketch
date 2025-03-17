@@ -299,6 +299,13 @@ limitations under the License.
                 </v-tab-item>
               </v-tabs-items>
             </v-col>
+            <v-col >
+              <v-data-table
+                :headers="conclusionEvents.headers"
+                :items="conclusionEvents.items"
+                >
+              </v-data-table>
+            </v-col>
           </v-row>
         </div>
       </v-expand-transition>
@@ -340,6 +347,13 @@ export default {
       showEmptySelect: false,
       suggestedQuery: {},
       suggestedQueryLoading: false,
+      conclusionEvents: {
+        headers: [
+        { text: 'datetime', value: 'datetime' },
+        { text: 'message', value: 'message' },
+        ],
+        items: []
+      },
     }
   },
   computed: {
@@ -505,6 +519,18 @@ export default {
       this.currentTitle = question.name
       this.expanded = true
       this.suggestedQuery = {}
+
+      console.log(question)
+
+      for (let conclusion of this.activeQuestion.conclusions) {
+        console.log(conclusion)
+        if (conclusion.user.username === this.currentUser) {
+          if (conclusion.conclusion_events) {
+            this.conclusionEvents.items.push(...conclusion.conclusion_events)
+            console.log(conclusion.conclusion_events)
+          }
+        }
+      }
 
       // Set active tab
       if (this.activeQuestion.conclusions.length) {

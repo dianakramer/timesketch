@@ -679,6 +679,25 @@ class QuestionResource(resources.ResourceMixin, Resource):
         """
         sketch = Sketch.get_with_acl(sketch_id)
         question = InvestigativeQuestion.get_by_id(question_id)
+        for conclusion in question.conclusions:
+            conclusion.conclusion_events = []
+            for event in conclusion.events:
+                query_string = f"_id:{event.document_id}"
+                result = self.datastore.search(
+                    sketch_id=event.sketch_id,
+                    query_string=query_string,
+                    query_filter={},
+                    query_dsl={},
+                    indices=[event.searchindex.index_name],
+                    return_fields="datetime,message",
+                )
+                logging.info(result)
+                conclusion.conclusion_events.append({
+                    "datetime": result['hits']['hits'][0]['_source']['datetime'],
+                    "message": result['hits']['hits'][0]['_source']['message']
+                })
+
+        logger.info("q: %s", question)
 
         if not sketch:
             abort(HTTP_STATUS_CODE_NOT_FOUND, "No sketch found with this ID")
