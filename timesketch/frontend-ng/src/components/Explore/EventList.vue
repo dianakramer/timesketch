@@ -407,6 +407,14 @@ limitations under the License.
               <v-icon title="Toggle star status" v-else>mdi-star-outline</v-icon>
             </v-btn>
 
+            <!-- Facts -->
+            <v-btn small icon @click="toggleFact(item)">
+              <v-icon title="Toggle fact status" v-if="item._source.label.includes('__ts_fact')" color="red"
+                >mdi-eye</v-icon
+              >
+              <v-icon title="Toggle fact status" v-else>mdi-eye-outline</v-icon>
+            </v-btn>
+
             <!-- Tag menu -->
             <ts-event-tag-menu :event="item"></ts-event-tag-menu>
 
@@ -678,7 +686,7 @@ export default {
         },
         {
           value: 'actions',
-          width: '105',
+          width: '125',
           sortable: false,
         },
         {
@@ -1074,6 +1082,23 @@ export default {
       ApiClient.saveEventAnnotation(this.sketch.id, 'label', '__ts_star', event, this.currentSearchNode)
         .then((response) => {
           this.$store.dispatch('updateEventLabels', { label: '__ts_star', num: count })
+        })
+        .catch((e) => {
+          console.error(e)
+        })
+    },
+    toggleFact(event) {
+      let count = 0
+      if (event._source.label.includes('__ts_fact')) {
+        event._source.label.splice(event._source.label.indexOf('__ts_fact'), 1)
+        count = -1
+      } else {
+        event._source.label.push('__ts_fact')
+        count = 1
+      }
+      ApiClient.saveEventAnnotation(this.sketch.id, 'label', '__ts_fact', event, this.currentSearchNode)
+        .then((response) => {
+          this.$store.dispatch('updateEventLabels', { label: '__ts_fact', num: count })
         })
         .catch((e) => {
           console.error(e)

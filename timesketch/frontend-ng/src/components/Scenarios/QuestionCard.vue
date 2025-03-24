@@ -299,10 +299,11 @@ limitations under the License.
                 </v-tab-item>
               </v-tabs-items>
             </v-col>
-            <v-col >
+            <v-col class="pa-4">
               <v-data-table
                 :headers="conclusionEvents.headers"
                 :items="conclusionEvents.items"
+                hide-default-footer
                 >
               </v-data-table>
             </v-col>
@@ -414,6 +415,12 @@ export default {
       }
       return this.activeQuestion.conclusions.filter((conclusion) => conclusion.user.username === this.currentUser)
         .length
+    },
+    totalHits() {
+      if (this.conclusionEvents.meta.es_total_count > 0 && this.conclusionEvents.meta.es_total_count_complete === 0) {
+        return this.conclusionEvents.meta.es_total_count
+      }
+      return this.conclusionEvents.meta.es_total_count_complete || 0
     },
   },
   methods: {
