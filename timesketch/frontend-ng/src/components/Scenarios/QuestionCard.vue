@@ -303,7 +303,8 @@ limitations under the License.
               <v-data-table
                 :headers="conclusionEvents.headers"
                 :items="conclusionEvents.items"
-                hide-default-footer
+                :items-per-page="5"
+                :hide-default-footer="conclusionEvents.items.length < 6"
                 >
               </v-data-table>
             </v-col>
