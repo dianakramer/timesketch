@@ -911,14 +911,6 @@ class EventAnnotationResource(resources.ResourceMixin, Resource):
                         search_node_label = "__ts_fact"
                     current_search_node.add_label(search_node_label)
 
-                # Adding STARS to Conclusions
-                if current_search_node and "__ts_star" in form.annotation.data:
-                    if hasattr(current_search_node, 'investigativequestion') and current_search_node.investigativequestion:
-                        if hasattr(current_search_node.investigativequestion, 'conclusions') and current_search_node.investigativequestion.conclusions:
-                            for conclusion in current_search_node.investigativequestion.conclusions:
-                                if conclusion.user_id == current_user.id:
-                                    event.conclusions.append(conclusion)
-
                 # Adding FACTS to Conclusions
                 if current_search_node and "__ts_fact" in form.annotation.data:
                     if hasattr(current_search_node, 'investigativequestion') and current_search_node.investigativequestion:

@@ -336,6 +336,10 @@ limitations under the License.
                   <v-icon left color="amber">mdi-star</v-icon>
                   Toggle star
                 </v-btn>
+                <v-btn x-small outlined @click="toggleMultipleFacts()">
+                  <v-icon left color="red">mdi-eye</v-icon>
+                  Toggle star
+                </v-btn>
               </div>
 
               <v-spacer></v-spacer>
@@ -1087,6 +1091,24 @@ export default {
           console.error(e)
         })
     },
+    toggleMultipleStars: function () {
+      let netStarCountChange = 0
+      this.selectedEvents.forEach((event) => {
+        if (event._source.label.includes('__ts_star')) {
+          event._source.label.splice(event._source.label.indexOf('__ts_star'), 1)
+          netStarCountChange--
+        } else {
+          event._source.label.push('__ts_star')
+          netStarCountChange++
+        }
+      })
+      ApiClient.saveEventAnnotation(this.sketch.id, 'label', '__ts_star', this.selectedEvents, this.currentSearchNode)
+        .then((response) => {
+          this.$store.dispatch('updateEventLabels', { label: '__ts_star', num: netStarCountChange })
+          this.selectedEvents = []
+        })
+        .catch((e) => {})
+    },
     toggleFact(event) {
       let count = 0
       if (event._source.label.includes('__ts_fact')) {
@@ -1104,20 +1126,20 @@ export default {
           console.error(e)
         })
     },
-    toggleMultipleStars: function () {
+    toggleMultipleFacts: function () {
       let netStarCountChange = 0
       this.selectedEvents.forEach((event) => {
-        if (event._source.label.includes('__ts_star')) {
-          event._source.label.splice(event._source.label.indexOf('__ts_star'), 1)
+        if (event._source.label.includes('__ts_fact')) {
+          event._source.label.splice(event._source.label.indexOf('__ts_fact'), 1)
           netStarCountChange--
         } else {
-          event._source.label.push('__ts_star')
+          event._source.label.push('__ts_fact')
           netStarCountChange++
         }
       })
-      ApiClient.saveEventAnnotation(this.sketch.id, 'label', '__ts_star', this.selectedEvents, this.currentSearchNode)
+      ApiClient.saveEventAnnotation(this.sketch.id, 'label', '__ts_fact', this.selectedEvents, this.currentSearchNode)
         .then((response) => {
-          this.$store.dispatch('updateEventLabels', { label: '__ts_star', num: netStarCountChange })
+          this.$store.dispatch('updateEventLabels', { label: '__ts_fact', num: netStarCountChange })
           this.selectedEvents = []
         })
         .catch((e) => {})
