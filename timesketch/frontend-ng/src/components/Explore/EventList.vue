@@ -338,7 +338,7 @@ limitations under the License.
                 </v-btn>
                 <v-btn x-small outlined @click="toggleMultipleFacts()">
                   <v-icon left color="red">mdi-eye</v-icon>
-                  Toggle star
+                  Toggle facts
                 </v-btn>
               </div>
 
